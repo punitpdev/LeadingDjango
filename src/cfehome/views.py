@@ -6,11 +6,18 @@ def home(request, *args, **kwargs):
     qs = PageVisit.objects.all()
     page_qs = PageVisit.objects.filter(path=request.path)
     my_title = "My page"
+
+    total = qs.count()
+    if total == 0:
+        percent = 0
+    else:
+        percent = (page_qs.count() * 100.0) / total
+
     my_context = {
-        "page_title": my_title, 
+        "page_title": my_title,
         "page_visit_count": page_qs.count(),
-        "percent": (page_qs.count() * 100.0) / qs.count(),
-        "total_visit_count": qs.count()
+        "percent": percent,
+        "total_visit_count": qs.count(),
     }
     my_template = "home.html"
     PageVisit.objects.create(path=request.path)
