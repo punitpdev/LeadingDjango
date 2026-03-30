@@ -26,8 +26,6 @@ SECRET_KEY = config("DJANGO_SECRET_KEY2")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool)
 
-print(DEBUG)
-
 ALLOWED_HOSTS = [
     ".railway.app",
 ]
@@ -88,15 +86,18 @@ DATABASES = {
     }
 }
 
-CONN_MAX_AGE = config("CONN_MAX_AGE", cost=int, default=30)
+CONN_MAX_AGE = config("CONN_MAX_AGE", cast=int, default=30)
 DATABASES_URL = config("DATABASE_URL", default=None, cast=str)
 
+print(CONN_MAX_AGE)
 if DATABASES_URL is not None:
     import dj_database_url
 
     DATABASES = {
         "default": dj_database_url.config(
-            default=str(DATABASES_URL), conn_health_checks=True, conn_max_age=30
+            default=str(DATABASES_URL),
+            conn_health_checks=True,
+            conn_max_age=CONN_MAX_AGE
         )
     }
 
