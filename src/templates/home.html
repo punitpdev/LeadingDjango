@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+  HomePage
+{% endblock %}
+
+{% block content %}
+  <h1>Hello again</h1>
+  {% include 'snippet/welcome.html' %}
+  <p>Page Visit : {{ page_visit_count }}</p>
+  <p>Total Visit : {{ total_visit_count }}</p>
+  <p>Persent : {{ percent }}%</p>
+{% endblock %}
