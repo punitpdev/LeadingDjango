@@ -21,22 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("DJANGO_SECRET_KEY2") 
+SECRET_KEY = config("DJANGO_SECRET_KEY2")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", cast=bool) 
+DEBUG = config("DEBUG", cast=bool)
 
 print(DEBUG)
 
 ALLOWED_HOSTS = [
-  ".railway.app",
+    ".railway.app",
 ]
 
 if DEBUG:
-  ALLOWED_HOSTS += [
-    "127.0.0.1",
-    "localhost"
-  ]
+    ALLOWED_HOSTS += ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -84,7 +81,6 @@ WSGI_APPLICATION = "cfehome.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -92,6 +88,17 @@ DATABASES = {
     }
 }
 
+CONN_MAX_AGE = config("CONN_MAX_AGE", cost=int, default=30)
+DATABASES_URL = config("DATABASE_URL", default=None, cast=str)
+
+if DATABASES_URL is not None:
+    import dj_database_url
+
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=str(DATABASES_URL), conn_health_checks=True, conn_max_age=30
+        )
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
