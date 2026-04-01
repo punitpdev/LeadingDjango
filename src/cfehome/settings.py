@@ -37,6 +37,7 @@ if DEBUG:
 # Application definition
 
 INSTALLED_APPS = [
+    "commando",
     "visit",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -79,27 +80,18 @@ WSGI_APPLICATION = "cfehome.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
 CONN_MAX_AGE = config("CONN_MAX_AGE", cast=int, default=30)
-DATABASES_URL = config("DATABASE_URL", default=None, cast=str)
+DATABASE_URL = config("DATABASE_URL", default="sqlite:///db.sqlite3")
 
-print(CONN_MAX_AGE)
-if DATABASES_URL is not None:
-    import dj_database_url
+import dj_database_url
 
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=str(DATABASES_URL),
-            conn_health_checks=True,
-            conn_max_age=CONN_MAX_AGE
-        )
-    }
+DATABASES = {
+    "default": dj_database_url.config(
+        default=str(DATABASE_URL),
+        conn_max_age=CONN_MAX_AGE,
+        conn_health_checks=True,
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -135,7 +127,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "staticfiles/"
+STATICFILES_BASE_DIR = BASE_DIR / "staticfiles"
+STATICFILES_VENDOR_DIR = STATICFILES_BASE_DIR / "vendors"
+
+# source's for python manage.py collecstatic
+STATICFILES_DIRS = [
+   STATICFILES_BASE_DIR
+]
+
+# ourput for python manage.py collecstatic
+# local cdn
+STATIC_ROOT = BASE_DIR / 'local-cdn'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
