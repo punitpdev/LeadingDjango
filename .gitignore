@@ -1,6 +1,7 @@
 .venv/
 .DS_Store
 src/staticfiles/vendors/*
+src/local-cdn/*
 __pycache__/
 *.py[cod]
 *$py.class

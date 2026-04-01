@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -127,18 +128,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "staticfiles/"
+# URL to access static files in browser
+STATIC_URL = "/staticfiles/"
+
+# Base directory for static source files (your assets)
 STATICFILES_BASE_DIR = BASE_DIR / "staticfiles"
 STATICFILES_VENDOR_DIR = STATICFILES_BASE_DIR / "vendors"
 
-# source's for python manage.py collecstatic
+# Source directories (used by collectstatic)
 STATICFILES_DIRS = [
-   STATICFILES_BASE_DIR
+    STATICFILES_BASE_DIR,
 ]
 
-# ourput for python manage.py collecstatic
-# local cdn
-STATIC_ROOT = BASE_DIR / 'local-cdn'
+# Output directory (where collectstatic collects files)
+STATIC_ROOT = BASE_DIR / "local-cdn"  # better naming than local-cdn
+
+# Storage backend (for compression + cache busting)
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
